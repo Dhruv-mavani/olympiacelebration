@@ -7,6 +7,9 @@ window.SITE = {
   tourReel: "https://www.instagram.com/olympiacelebration_/reel/DdtmQo-tGYJ/",
   maps: "https://www.google.com/maps/search/?api=1&query=Olympia+celebration+KSB+Olympia+Pandesara+Surat",
 
+  // Opens the Reviews tab of the Google Maps listing.
+  reviews: "https://www.google.com/maps/place/Olympia+celebration/@21.1500193,72.8222372,17z/data=!4m8!3m7!1s0x3be05105df74c5eb:0x20e22550361e4ede!8m2!3d21.1500193!4d72.8222372!9m1!1b1!16s%2Fg%2F11ntfryf_v",
+
   // If you change prices, also update the fallback text in index.html and "hero_hint" in i18n.js.
   packages: [
     { id: "p1", price: 1299, hours: 1, guests: 10, features: ["decor", "cake", "sound", "projector", "ac"] },

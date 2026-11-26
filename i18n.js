@@ -39,6 +39,14 @@ window.I18N = {
   a_bubble: ["Bubble entry", "Bubble entry", "બબલ એન્ટ્રી"], a_smoke: ["Smoke entry", "Smoke entry", "સ્મોક એન્ટ્રી"], a_ledbox: ["LED message box", "LED message box", "LED મેસેજ બોક્સ"],
   a_projectorHour: ["Projector (1 hour)", "Projector (1 ghanta)", "પ્રોજેક્ટર (1 કલાક)"], a_popcorn: ["Popcorn entry", "Popcorn entry", "પોપકોર્ન એન્ટ્રી"],
 
+  rev_t: ["Guests on Google.", "Google par guests.", "Google પર મહેમાનો."],
+  rev_count: ["2 Google reviews, as of Nov 2026", "2 Google reviews, Nov 2026 tak", "2 Google રિવ્યૂ, નવે. 2026 સુધી"],
+  rev_source: ["Google review", "Google review", "Google રિવ્યૂ"],
+  rev_read: ["Read on Google Maps", "Google Maps par padho", "Google Maps પર વાંચો"],
+  rev_write_t: ["Celebrated with us?", "Humare saath celebrate kiya?", "અમારી સાથે ઉજવણી કરી?"],
+  rev_write_p: ["Tell others how your party went.", "Doosron ko batao party kaisi rahi.", "તમારી પાર્ટી કેવી રહી તે બીજાને જણાવો."],
+  rev_write: ["Review us on Google Maps", "Google Maps par review do", "Google Maps પર રિવ્યૂ આપો"],
+
   bk_t: ["Reserve your night.", "Apni date reserve karo.", "તમારી તારીખ બુક કરો."],
   bk_lede: ["{occasion} for {name}. Three quick steps.", "{name} ke liye {occasion}. Bas teen step.", "{name} માટે {occasion}. ફક્ત ત્રણ સ્ટેપ."],
   bk_lede_none: ["{occasion}, three quick steps.", "{occasion}, bas teen step.", "{occasion}, ફક્ત ત્રણ સ્ટેપ."],

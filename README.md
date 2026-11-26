@@ -7,6 +7,7 @@ Sample website for a private party room in Pandesara, Surat. Plain HTML, CSS and
 | `data.js` | Phone, links, packages, occasions and sign colours, add-ons, photos |
 | `i18n.js` | All text in English, Hinglish and Gujarati |
 | `index.html`, `styles.css`, `app.js` | Layout, design, behaviour |
+| `index.html` (reviews section) | Google review cards. Add only real reviews, and update the count in `i18n.js` and the facts list |
 | `images/` | Photos. Overwrite a file with the same name to swap it |
 | `BUSINESS-INFO.md` | Collected details, sources and open questions |
 

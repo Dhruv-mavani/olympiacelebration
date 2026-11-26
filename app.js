@@ -25,7 +25,7 @@
   const packMeta = p => t(p.hours === 1 ? "meta1" : "meta2", { n: p.guests, h: p.hours });
 
   const links = {
-    call: "tel:" + S.phone, instagram: S.instagram, tourReel: S.tourReel, maps: S.maps,
+    call: "tel:" + S.phone, instagram: S.instagram, tourReel: S.tourReel, maps: S.maps, reviews: S.reviews,
     whatsapp: `https://wa.me/${S.whatsapp}?text=${encodeURIComponent("Hello Olympia Celebration, I would like to book the party room.")}`
   };
   $$("[data-link]").forEach(a => { a.href = links[a.dataset.link]; });
@@ -135,6 +135,32 @@
   $("#left").onclick = () => slide(-1);
   $("#right").onclick = () => slide(1);
   light.addEventListener("click", e => { if (e.target.tagName !== "IMG") light.close(); });
+
+  /* ---------- Google reviews carousel ---------- */
+  const track = $("#revTrack"), slides = [...track.children], dots = $("#revDots");
+  let slide0 = 0;
+  const centre = n => n.offsetLeft + n.offsetWidth / 2;
+  function showSlide(i) {
+    const n = slides[(i + slides.length) % slides.length]; // wraps around at both ends
+    track.scrollTo({ left: centre(n) - track.clientWidth / 2, behavior: reduced.matches ? "auto" : "smooth" });
+  }
+  dots.append(...slides.map((_, i) => {
+    const b = el("button", { type: "button" });
+    b.setAttribute("aria-label", `Show review card ${i + 1}`);
+    b.onclick = () => showSlide(i);
+    return b;
+  }));
+  function markSlide() {
+    const mid = track.scrollLeft + track.clientWidth / 2;
+    slide0 = slides.reduce((best, n, i) => Math.abs(centre(n) - mid) < Math.abs(centre(slides[best]) - mid) ? i : best, 0);
+    slides.forEach((n, i) => n.classList.toggle("on", i === slide0));
+    [...dots.children].forEach((d, i) => d.setAttribute("aria-current", i === slide0));
+  }
+  track.addEventListener("scroll", () => requestAnimationFrame(markSlide), { passive: true });
+  addEventListener("resize", markSlide);
+  $("#revPrev").onclick = () => showSlide(slide0 - 1);
+  $("#revNext").onclick = () => showSlide(slide0 + 1);
+  markSlide();
 
   /* ---------- Plans and add-ons ---------- */
   function setPack(id) { state.pack = id; state.guests = Math.min(state.guests, pack().guests); renderPlans(); renderParty(); }
