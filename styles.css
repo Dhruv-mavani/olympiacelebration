@@ -68,29 +68,41 @@ input:focus { border-color: var(--neon); }
 .switch[aria-pressed="true"]::before { background: var(--neon); box-shadow: 0 0 10px 2px var(--neon); }
 .hint { font-size: .82rem; margin: 12px 0 0; }
 
-/* 2 · Lights on */
-.lights { position: relative; background: #050908; }
+/* 2 · The room, traced in neon */
+.trace { position: relative; background: #050908; }
 .pin { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(30px, 6vw, 90px); align-items: center; justify-content: center; padding: 80px 24px; }
-.room { position: relative; height: min(calc(100svh - 110px), 880px); aspect-ratio: 1036 / 1844; overflow: hidden; border-radius: 26px; background: #000; }
-.room img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.room .off, .room .spot { display: none; }
+.room { position: relative; height: min(calc(100svh - 110px), 880px); aspect-ratio: 1036 / 1844; overflow: hidden; border-radius: 26px; background: #050908; box-shadow: 0 0 0 1.5px var(--line), 0 0 70px color-mix(in srgb, var(--neon) 18%, transparent); }
+.world { position: absolute; top: 0; left: 0; width: 1036px; height: 1844px; transform-origin: 0 0; }
+html:not(.js) .world { position: static; width: 100%; height: 100%; }
+.world img { width: 100%; height: 100%; max-width: none; object-fit: cover; }
+/* One even evening tone over the whole photo, so the tubes read against the pale walls. */
+.js .world img { opacity: .66; transition: opacity .75s; }
+.js .finale .world img { opacity: .78; }
+#traces { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.corner { transition: opacity .5s; }
+.corner.past { opacity: .5; }
+.corner path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 2; }
+.corner .halo { stroke: var(--neon); stroke-width: calc(var(--u, 1px) * 15); opacity: .24; }
+.corner .gas { stroke: var(--neon); stroke-width: calc(var(--u, 1px) * 6); }
+.corner .core { stroke: #fffaf4; stroke-width: calc(var(--u, 1px) * 2); }
+.spark { fill: #fff; filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px var(--neon)); }
+.finale .corner { animation: strike .75s linear; }
+@keyframes strike { 0%, 24%, 44% { opacity: .15; } 12%, 34%, 60%, 100% { opacity: 1; } }
 .spots { list-style: none; margin: 0; padding: 0; }
 .spots li { margin-bottom: 22px; }
 .spots p { margin: 0; max-width: 30em; }
-.js .lights.scrub { height: 520vh; }
+.js .trace.scrub { height: 560vh; }
 .js .scrub .pin { position: sticky; top: 64px; height: calc(100svh - 64px); padding-top: 18px; padding-bottom: 18px; }
 .js .scrub .room { height: min(calc(100svh - 100px), 880px); }
-.js .scrub .room .off, .js .scrub .room .spot { display: block; }
-.js .scrub .off { filter: brightness(.13) saturate(.5); }
-.js .scrub .spot {
-  -webkit-mask-image: radial-gradient(circle var(--r0, 1px) at var(--x0, 21%) var(--y0, 51%), #000 55%, #0000), radial-gradient(circle var(--r1, 1px) at var(--x1, 58%) var(--y1, 17%), #000 55%, #0000), radial-gradient(circle var(--r2, 1px) at var(--x2, 40%) var(--y2, 78%), #000 55%, #0000), radial-gradient(circle var(--r3, 1px) at var(--x3, 91%) var(--y3, 58%), #000 55%, #0000);
-  mask-image: radial-gradient(circle var(--r0, 1px) at var(--x0, 21%) var(--y0, 51%), #000 55%, #0000), radial-gradient(circle var(--r1, 1px) at var(--x1, 58%) var(--y1, 17%), #000 55%, #0000), radial-gradient(circle var(--r2, 1px) at var(--x2, 40%) var(--y2, 78%), #000 55%, #0000), radial-gradient(circle var(--r3, 1px) at var(--x3, 91%) var(--y3, 58%), #000 55%, #0000); }
-.js .scrub .full { opacity: var(--all, 0); }
 .js .scrub .spots { display: grid; }
 .js .scrub .spots li { grid-area: 1 / 1; margin: 0; opacity: 0; visibility: hidden; transform: translateY(24px); transition: opacity .375s, transform .75s var(--ease), visibility .375s; }
 .js .scrub .spots li.on { opacity: 1; visibility: visible; transform: none; }
 .js .scrub .spots h3 { font-size: clamp(1.6rem, 3.4vw, 2.7rem); color: var(--cream); text-shadow: 0 0 18px color-mix(in srgb, var(--neon) 80%, transparent); }
-.lights:not(.scrub) .scroll-hint { display: none; }
+.stops { display: flex; gap: 6px; margin-top: 18px; }
+.stops button { width: 42px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer; }
+.stops button::before { content: ""; display: block; height: 4px; border-radius: 4px; background: #ffffff26; transition: background-color .3s, box-shadow .3s; }
+.stops button.done::before { background: var(--neon); box-shadow: 0 0 10px var(--neon); }
+.trace:not(.scrub) .scroll-hint, .trace:not(.scrub) .stops { display: none; }
 
 .corners { padding: 90px 0 40px; }
 .corners-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; padding: 0 clamp(18px, 5vw, 70px); }
@@ -204,10 +216,11 @@ dialog button { display: block; margin-left: auto; border: 0; background: none; 
   .pin { grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .room { height: auto; width: min(100%, 440px); }
   /* Pinned on phones: photo on top, one caption underneath, so no spot is covered. */
-  .js .scrub .pin { grid-template-rows: minmax(0, 1fr) 150px; gap: 12px; padding: 10px 12px; }
+  .js .scrub .pin { grid-template-rows: minmax(0, 1fr) 176px; gap: 12px; padding: 10px 12px; }
   .js .scrub .room { width: 100%; height: 100%; aspect-ratio: auto; }
   .js .scrub .story { align-self: start; width: 100%; text-align: center; }
   .js .scrub .story h2, .js .scrub .scroll-hint { display: none; }
+  .stops { justify-content: center; margin-top: 6px; }
 }
 @media (max-width: 560px) {
   .days { grid-template-columns: repeat(4, 1fr); }

@@ -11,8 +11,8 @@ window.I18N = {
   o_birthday: ["Birthday", "Birthday", "બર્થડે"], o_anniversary: ["Anniversary", "Anniversary", "એનિવર્સરી"], o_proposal: ["Proposal", "Proposal", "પ્રપોઝલ"],
   o_surprise: ["Surprise", "Surprise", "સરપ્રાઇઝ"], o_kitty: ["Kitty party", "Kitty party", "કિટી પાર્ટી"], o_other: ["Something else", "Kuch aur", "બીજું કંઈ"],
 
-  lights_t: ["Let’s switch the room on.", "Chalo room ki lights on karein.", "ચાલો રૂમની લાઇટ ચાલુ કરીએ."],
-  lights_hint: ["Keep scrolling to switch on more.", "Aur lights ke liye scroll karte raho.", "વધુ લાઇટ માટે સ્ક્રોલ કરતા રહો."],
+  trace_t: ["The room, drawn in neon.", "Poora room, neon mein.", "આખો રૂમ, નિયોનમાં."],
+  trace_hint: ["Scroll, and the neon shows you around.", "Scroll karo, neon aapko room dikhayega.", "સ્ક્રોલ કરો, નિયોન તમને રૂમ બતાવશે."],
   s1_t: ["The umbrella niche", "Umbrella niche", "છત્રીવાળી કમાન"], s1_p: ["A glowing arch with a flower umbrella. Sit under it for the photo.", "Glowing arch aur phoolon wali umbrella. Photo yahin lo.", "ફૂલોની છત્રીવાળી ઝળહળતી કમાન. ફોટો અહીં પાડો."],
   s2_t: ["A ceiling of flowers", "Phoolon wali ceiling", "ફૂલોવાળી છત"], s2_p: ["Hanging blooms, a mirror ball and a ring chandelier overhead.", "Latakte phool, mirror ball aur ring chandelier.", "લટકતાં ફૂલો, મિરર બોલ અને રિંગ ઝુમ્મર."],
   s3_t: ["Your lounge", "Aapka lounge", "તમારું લાઉન્જ"], s3_p: ["Sofa, candle table and full air conditioning, in a private room.", "Sofa, candle table aur full AC, private room mein.", "પ્રાઇવેટ રૂમમાં સોફા, કેન્ડલ ટેબલ અને ફુલ AC."],

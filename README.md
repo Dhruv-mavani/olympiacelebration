@@ -11,7 +11,7 @@ Sample website for a private party room in Pandesara, Surat. Plain HTML, CSS and
 | `images/` | Photos. Overwrite a file with the same name to swap it |
 | `BUSINESS-INFO.md` | Collected details, sources and open questions |
 
-Design: "your name in neon". The visitor's name and occasion light up on the opening sign and carry into the booking message. Further down, scrolling switches the room's lights on spot by spot (`spots` in `data.js`).
+Design: "your name in neon". The visitor's name and occasion light up on the opening sign and carry into the booking message. Further down, scrolling flies around the room while neon traces each corner (`tour` in `data.js`; the outlines are drawn for `images/flower-ceiling.webp`, so a new photo needs new outlines).
 
 Prices also appear in `index.html` (fallback text and meta description) and `hero_hint` in `i18n.js`, so update those too.
 

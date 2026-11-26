@@ -89,38 +89,112 @@
   });
   $("#name").addEventListener("keydown", e => { if (e.key === "Enter") e.target.blur(); });
 
-  /* ---------- Lights on: scroll position switches on one spot at a time ---------- */
-  const lights = $("#lights"), room = $("#room"), items = $$(".spots li");
+  /* ---------- Neon room tour: scrolling flies a camera around the photo while neon traces each corner ---------- */
+  const trace = $("#tour"), room = $("#room"), world = $("#world"), art = $("#traces"), items = $$(".spots li");
   const clamp = v => Math.min(1, Math.max(0, v));
-  const ease = v => 1 - Math.pow(1 - v, 3);
-  let queued = false;
-  function drawLights() {
-    queued = false;
-    if (!lights.classList.contains("scrub")) return;
-    const box = lights.getBoundingClientRect(), pinH = $(".pin").offsetHeight;
-    const p = clamp((64 - box.top) / (box.height - pinH));
-    const step = p * 5.2; // the last 0.2 holds the fully lit room
-    const W = room.clientWidth, H = room.clientHeight, k = Math.max(W / 1036, H / 1844);
-    const left = (W - 1036 * k) / 2, top = (H - 1844 * k) / 2; // matches object-fit: cover
-    S.spots.forEach(([x, y, r], i) => {
-      room.style.setProperty(`--x${i}`, left + x * 1036 * k + "px");
-      room.style.setProperty(`--y${i}`, top + y * 1844 * k + "px");
-      // The first spot is already part-lit on arrival, so the room is never just black.
-      const on = ease(clamp(i === 0 ? 0.5 + step : (step - i) / 0.6));
-      room.style.setProperty(`--r${i}`, Math.max(1, on * r * 1036 * k) + "px");
+  const glide = v => v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2;
+  const svg = (tag, attrs) => {
+    const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
+    return n;
+  };
+  const PW = 1036, PH = 1844, WIDE = [PW / 2, PH / 2, PW];
+  const units = S.tour.length + 1; // one per stop, plus the pull-back
+
+  // Every shape is three stacked strokes (halo, colour, white core), which is cheaper than an SVG blur.
+  const stops = S.tour.map(stop => {
+    const group = svg("g", { class: "corner" });
+    const shapes = stop.paths.map(d => {
+      const layers = ["halo", "gas", "core"].map(c => svg("path", { d, class: c, pathLength: 1 }));
+      group.append(...layers);
+      return { layers };
     });
-    room.style.setProperty("--all", clamp((step - 4) / 0.6));
-    const active = Math.min(4, Math.floor(step));
-    items.forEach((li, i) => li.classList.toggle("on", i === active));
+    art.append(group);
+    shapes.forEach(s => { s.length = s.layers[2].getTotalLength(); });
+    return { group, shapes, total: shapes.reduce((sum, s) => sum + s.length, 0) };
+  });
+  const spark = svg("circle", { class: "spark" });
+  art.append(spark);
+
+  // Draws the first "amount" (0 to 1) of a stop's shapes, in order. Returns where the tip is, if mid-line.
+  function paint(stop, amount) {
+    let left = amount * stop.total, tip = null;
+    stop.shapes.forEach(s => {
+      const part = clamp(left / s.length);
+      if (part > 0 && part < 1) tip = s.layers[2].getPointAtLength(part * s.length);
+      s.layers.forEach(p => { p.style.strokeDashoffset = 1 - part; p.style.visibility = part ? "visible" : "hidden"; });
+      left -= s.length;
+    });
+    return tip;
   }
-  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(drawLights); } };
+  const mix = (a, b, k) => a.map((v, i) => v + (b[i] - v) * k);
+  function aim([cx, cy, w]) {
+    const W = room.clientWidth, H = room.clientHeight, cover = Math.max(W / PW, H / PH);
+    const k = Math.max(cover, Math.min(W / w, H / (w * PH / PW)));
+    const x = Math.min(0, Math.max(W - PW * k, W / 2 - cx * k)), y = Math.min(0, Math.max(H - PH * k, H / 2 - cy * k));
+    world.style.transform = `translate(${x}px, ${y}px) scale(${k})`;
+    art.style.setProperty("--u", 1 / k + "px"); // keeps tubes the same thickness at every zoom
+    spark.setAttribute("r", 4 / k);
+  }
+
+  let queued = false, current = -1;
+  function drawTour() {
+    queued = false;
+    const scrub = trace.classList.contains("scrub");
+    let step = units;
+    if (scrub) {
+      const box = trace.getBoundingClientRect();
+      step = clamp((64 - box.top) / (box.height - $(".pin").offsetHeight)) * units;
+    }
+    const active = Math.min(units - 1, Math.floor(step)), finale = active === units - 1;
+    const local = clamp(step - active);
+
+    let tip = null;
+    stops.forEach((stop, i) => {
+      // Lines start drawing as the camera arrives and finish before it leaves.
+      const found = paint(stop, scrub ? clamp((step - i - 0.2) / 0.65) : 1);
+      if (i === active) tip = found;
+      stop.group.classList.toggle("past", scrub && !finale && i !== active);
+    });
+    spark.style.visibility = tip ? "visible" : "hidden";
+    if (tip) { spark.setAttribute("cx", tip.x); spark.setAttribute("cy", tip.y); }
+
+    if (scrub) {
+      const previous = active === 0 ? WIDE : S.tour[active - 1].to || S.tour[active - 1].cam;
+      const stop = S.tour[active];
+      let view = mix(previous, stop ? stop.cam : WIDE, glide(clamp(local / (finale ? 0.6 : 0.4))));
+      if (stop && stop.to && local > 0.4) view = mix(stop.cam, stop.to, glide(clamp((local - 0.4) / 0.5)));
+      aim(view);
+    } else aim(WIDE);
+
+    room.classList.toggle("finale", finale || !scrub);
+    if (active !== current) {
+      current = active;
+      items.forEach((li, i) => li.classList.toggle("on", i === active));
+      $$("#stops button").forEach((b, i) => { b.classList.toggle("done", i <= active); b.setAttribute("aria-current", i === active); });
+    }
+  }
+  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(drawTour); } };
+
+  // The bars under the caption jump straight to a stop.
+  $("#stops").append(...items.map((_, i) => {
+    const b = el("button", { type: "button" });
+    b.onclick = () => {
+      const travel = trace.offsetHeight - $(".pin").offsetHeight;
+      scrollTo({ top: trace.offsetTop - 64 + ((i + 0.92) / units) * travel, behavior: "smooth" });
+    };
+    return b;
+  }));
+
   function setScrub() {
-    // Short landscape screens and reduced motion get the fully lit photo and a plain list.
-    lights.classList.toggle("scrub", !reduced.matches && innerHeight > 520);
+    // Short landscape screens and reduced motion get the finished drawing and a plain list.
+    trace.classList.toggle("scrub", !reduced.matches && innerHeight > 520);
+    current = -1;
     queue();
   }
   addEventListener("scroll", queue, { passive: true });
   reduced.addEventListener("change", setScrub);
+  if ("ResizeObserver" in window) new ResizeObserver(queue).observe(room);
 
   /* ---------- Gallery ---------- */
   const strip = $("#strip"), light = $("#light"), tour = $(".tour", strip);
@@ -270,6 +344,7 @@
     $$("[data-i18n-ph]").forEach(n => { n.placeholder = t(n.dataset.i18nPh); });
     $$(".langs button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.lang === i));
     drawSign(); renderOccasions(); renderGallery(); renderPlans(); renderAddons(); renderLede(); renderDays(); renderParty(); showStep(state.step);
+    $$("#stops button").forEach((b, i) => b.setAttribute("aria-label", $("h3", items[i]).textContent));
     queue();
   }
   $$(".langs button").forEach(b => { b.onclick = () => applyLang(+b.dataset.lang); });

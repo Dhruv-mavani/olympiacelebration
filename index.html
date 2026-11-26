@@ -55,16 +55,17 @@
     <p class="hint" data-i18n="hero_hint">Decoration, cake, sound and projector. From ₹1,299.</p>
   </section>
 
-  <!-- 2 · Lights on -->
-  <section id="lights" class="lights" aria-labelledby="lightsTitle">
+  <!-- 2 · The room, traced in neon -->
+  <section id="tour" class="trace" aria-labelledby="traceTitle">
     <div class="pin">
       <div class="room" id="room">
-        <img class="off" src="images/flower-ceiling.webp" alt="" width="1036" height="1844">
-        <img class="spot" src="images/flower-ceiling.webp" alt="" width="1036" height="1844">
-        <img class="full" src="images/flower-ceiling.webp" alt="The party room: flower ceiling, umbrella niche, lounge sofa and balloon stage" width="1036" height="1844">
+        <div class="world" id="world">
+          <img src="images/flower-ceiling.webp" alt="The party room: flower ceiling, umbrella niche, lounge sofa and balloon stage" width="1036" height="1844">
+          <svg id="traces" viewBox="0 0 1036 1844" aria-hidden="true"></svg>
+        </div>
       </div>
       <div class="story">
-        <h2 id="lightsTitle" data-i18n="lights_t">Let’s switch the room on.</h2>
+        <h2 id="traceTitle" data-i18n="trace_t">The room, drawn in neon.</h2>
         <ol class="spots">
           <li><h3 data-i18n="s1_t">The umbrella niche</h3><p data-i18n="s1_p">A glowing arch with a flower umbrella. Sit under it for the photo.</p></li>
           <li><h3 data-i18n="s2_t">A ceiling of flowers</h3><p data-i18n="s2_p">Hanging blooms, a mirror ball and a ring chandelier overhead.</p></li>
@@ -72,7 +73,8 @@
           <li><h3 data-i18n="s4_t">The cake stage</h3><p data-i18n="s4_p">Balloon arch and neon backdrop where the cake gets cut.</p></li>
           <li><h3 data-i18n="s5_t">All yours.</h3><p data-i18n="s5_p">Add the projector and sound system, and the party is ready.</p></li>
         </ol>
-        <p class="hint scroll-hint js-only" data-i18n="lights_hint">Keep scrolling to switch on more.</p>
+        <div class="stops js-only" id="stops"></div>
+        <p class="hint scroll-hint js-only" data-i18n="trace_hint">Scroll, and the neon shows you around.</p>
       </div>
     </div>
   </section>
